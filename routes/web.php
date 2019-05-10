@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/chat', function() {
+    return view('chat');
+});
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
