@@ -1863,12 +1863,11 @@ __webpack_require__.r(__webpack_exports__);
       window.scrollTo(0, 99999);
     }
   },
-  mounted: function mounted() {
-    this.fetchMessages();
-  },
+  mounted: function mounted() {},
   created: function created() {
     var _this3 = this;
 
+    this.fetchMessages();
     Echo["private"]('chat').listen('MessageSent', function (e) {
       _this3.fetchMessages();
 
@@ -1990,15 +1989,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user'],
   data: function data() {
     return {
       message: null,
       activeFriend: null,
+      typingFriend: {},
+      typingClock: null,
       allMessages: [],
       users: []
     };
+  },
+  computed: {
+    friends: function friends() {
+      var _this = this;
+
+      return this.users.filter(function (user) {
+        return user.id !== _this.user.id;
+      });
+    }
   },
   watch: {
     activeFriend: function activeFriend(val) {
@@ -2006,8 +2017,13 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    onTyping: function onTyping() {
+      Echo["private"]('privatechat.' + this.activeFriend).whisper('typing', {
+        user: this.user
+      });
+    },
     sendMessage: function sendMessage() {
-      var _this = this;
+      var _this2 = this;
 
       //check if there message
       if (!this.message) {
@@ -2021,29 +2037,30 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('/chat/private/' + this.activeFriend, {
         message: this.message
       }).then(function (response) {
-        _this.message = null;
+        _this2.message = null;
 
-        _this.fetchMessages();
+        _this2.fetchMessages();
 
-        setTimeout(_this.scrollToEnd, 100);
+        setTimeout(_this2.scrollToEnd, 100);
       });
     },
     fetchMessages: function fetchMessages() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.activeFriend) {
         return alert('Please select friend');
       }
 
       axios.get('/chat/private/' + this.activeFriend).then(function (response) {
-        _this2.allMessages = response.data;
+        _this3.allMessages = response.data;
       });
     },
     fetchUsers: function fetchUsers() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get('/chat/users').then(function (response) {
-        _this3.users = response.data;
+        _this4.users = response.data;
+        _this4.activeFriend = _this4.friends[0].id;
       });
     },
     scrollToEnd: function scrollToEnd() {
@@ -2052,15 +2069,23 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {},
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.fetchUsers();
     Echo["private"]('privatechat.' + this.user.id).listen('PrivateMessageSent', function (e) {
-      _this4.activeFriend = e.message.user_id;
+      _this5.activeFriend = e.message.user_id;
 
-      _this4.fetchMessages();
+      _this5.fetchMessages();
 
-      setTimeout(_this4.scrollToEnd, 100);
+      setTimeout(_this5.scrollToEnd, 100);
+    }).listenForWhisper('typing', function (e) {
+      if (e.user.id == _this5.activeFriend) {
+        _this5.typingFriend = e.user;
+        if (_this5.typingClock) clearTimeout();
+        _this5.typingClock = setTimeout(function () {
+          _this5.typingFriend = {};
+        }, 9000);
+      }
     });
   }
 });
@@ -6543,7 +6568,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.chat-card[data-v-047f85c8]{\r\n  margin-bottom: 140px !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.chat-card[data-v-047f85c8] {\r\n  margin-bottom: 140px !important;\n}\r\n", ""]);
 
 // exports
 
@@ -6562,7 +6587,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.online-users[data-v-237378e0],.messages[data-v-237378e0]{\r\n  overflow-y:scroll;\r\n  height:100vh;\n}\r\n", ""]);
+exports.push([module.i, "\n.online-users[data-v-237378e0], .messages[data-v-237378e0] {\r\n  overflow-y: scroll;\r\n  height: 100vh;\n}\r\n", ""]);
 
 // exports
 
@@ -48451,43 +48476,39 @@ var render = function() {
         [
           _c(
             "v-list",
-            _vm._l(_vm.users, function(friend) {
-              return _vm.user.id != friend.id
-                ? _c(
-                    "v-list-tile",
-                    {
-                      key: friend.id,
-                      attrs: {
-                        color: friend.id == _vm.activeFriend ? "green" : ""
-                      },
-                      on: {
-                        click: function($event) {
-                          _vm.activeFriend = friend.id
-                        }
-                      }
-                    },
+            _vm._l(_vm.friends, function(friend) {
+              return _c(
+                "v-list-tile",
+                {
+                  key: friend.id,
+                  attrs: {
+                    color: friend.id == _vm.activeFriend ? "green" : ""
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.activeFriend = friend.id
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "v-list-tile-action",
                     [
-                      _c(
-                        "v-list-tile-action",
-                        [
-                          _c("v-icon", { attrs: { color: "green" } }, [
-                            _vm._v("account_circle")
-                          ])
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-list-tile-content",
-                        [
-                          _c("v-list-tile-title", [_vm._v(_vm._s(friend.name))])
-                        ],
-                        1
-                      )
+                      _c("v-icon", { attrs: { color: "green" } }, [
+                        _vm._v("account_circle")
+                      ])
                     ],
                     1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-list-tile-content",
+                    [_c("v-list-tile-title", [_vm._v(_vm._s(friend.name))])],
+                    1
                   )
-                : _vm._e()
+                ],
+                1
+              )
             }),
             1
           )
@@ -48504,89 +48525,97 @@ var render = function() {
         [
           _c(
             "v-list",
-            _vm._l(_vm.allMessages, function(message, index) {
-              return _c(
-                "v-list-tile",
-                { key: index, staticClass: "p-3" },
-                [
-                  _c(
-                    "v-layout",
-                    {
-                      attrs: {
-                        "align-end": _vm.user.id !== message.user.id,
-                        column: ""
-                      }
-                    },
-                    [
-                      _c(
-                        "v-flex",
-                        [
-                          _c(
-                            "v-layout",
-                            { attrs: { column: "" } },
-                            [
-                              _c("v-flex", [
-                                _c(
-                                  "span",
-                                  { staticClass: "small font-italic" },
-                                  [_vm._v(_vm._s(message.user.name))]
-                                )
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "v-flex",
-                                [
+            [
+              _vm._l(_vm.allMessages, function(message, index) {
+                return _c(
+                  "v-list-tile",
+                  { key: index, staticClass: "p-3" },
+                  [
+                    _c(
+                      "v-layout",
+                      {
+                        attrs: {
+                          "align-end": _vm.user.id !== message.user.id,
+                          column: ""
+                        }
+                      },
+                      [
+                        _c(
+                          "v-flex",
+                          [
+                            _c(
+                              "v-layout",
+                              { attrs: { column: "" } },
+                              [
+                                _c("v-flex", [
                                   _c(
-                                    "v-chip",
-                                    {
-                                      attrs: {
-                                        color:
-                                          _vm.user.id !== message.user.id
-                                            ? "red"
-                                            : "green",
-                                        "text-color": "white"
-                                      }
-                                    },
-                                    [
-                                      _c("v-list-tile-content", [
-                                        _vm._v(
-                                          "\n                      " +
-                                            _vm._s(message.message) +
-                                            "\n                    "
-                                        )
-                                      ])
-                                    ],
-                                    1
+                                    "span",
+                                    { staticClass: "small font-italic" },
+                                    [_vm._v(_vm._s(message.user.name))]
                                   )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-flex",
-                                { staticClass: "caption font-italic" },
-                                [
-                                  _vm._v(
-                                    "\n                  " +
-                                      _vm._s(message.created_at) +
-                                      "\n                "
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            }),
-            1
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-flex",
+                                  [
+                                    _c(
+                                      "v-chip",
+                                      {
+                                        attrs: {
+                                          color:
+                                            _vm.user.id !== message.user.id
+                                              ? "red"
+                                              : "green",
+                                          "text-color": "white"
+                                        }
+                                      },
+                                      [
+                                        _c("v-list-tile-content", [
+                                          _vm._v(
+                                            "\n                      " +
+                                              _vm._s(message.message) +
+                                              "\n                    "
+                                          )
+                                        ])
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-flex",
+                                  { staticClass: "caption font-italic" },
+                                  [
+                                    _vm._v(
+                                      "\n                  " +
+                                        _vm._s(message.created_at) +
+                                        "\n                "
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              }),
+              _vm._v(" "),
+              _vm.typingFriend.name
+                ? _c("p", [
+                    _vm._v(_vm._s(_vm.typingFriend.name) + " is typing...")
+                  ])
+                : _vm._e()
+            ],
+            2
           ),
           _vm._v(" "),
           _c(
@@ -48615,6 +48644,7 @@ var render = function() {
                           "single-line": ""
                         },
                         on: {
+                          keydown: _vm.onTyping,
                           keyup: function($event) {
                             if (
                               !$event.type.indexOf("key") &&
@@ -87026,14 +87056,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/PrivateChat.vue ***!
   \*************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PrivateChat_vue_vue_type_template_id_237378e0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PrivateChat.vue?vue&type=template&id=237378e0&scoped=true& */ "./resources/js/components/PrivateChat.vue?vue&type=template&id=237378e0&scoped=true&");
 /* harmony import */ var _PrivateChat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PrivateChat.vue?vue&type=script&lang=js& */ "./resources/js/components/PrivateChat.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _PrivateChat_vue_vue_type_style_index_0_id_237378e0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrivateChat.vue?vue&type=style&index=0&id=237378e0&scoped=true&lang=css& */ "./resources/js/components/PrivateChat.vue?vue&type=style&index=0&id=237378e0&scoped=true&lang=css&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _PrivateChat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _PrivateChat_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _PrivateChat_vue_vue_type_style_index_0_id_237378e0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PrivateChat.vue?vue&type=style&index=0&id=237378e0&scoped=true&lang=css& */ "./resources/js/components/PrivateChat.vue?vue&type=style&index=0&id=237378e0&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -87065,7 +87096,7 @@ component.options.__file = "resources/js/components/PrivateChat.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/PrivateChat.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

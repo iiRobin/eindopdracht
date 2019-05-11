@@ -3,9 +3,8 @@
     <v-flex class="online-users" xs3>
       <v-list>
           <v-list-tile
-            :color="(friend.id == activeFriend) ? 'green' : '' "
-            v-for="friend in users"
-            v-if="user.id != friend.id"
+            v-for="friend in friends"
+            :color="(friend.id == activeFriend) ? 'green' : ''"
             :key="friend.id"
             @click="activeFriend = friend.id"
           >
@@ -61,9 +60,10 @@
                </v-layout>
              </v-flex>
            </v-layout>
+         </v-list-tile>
 
+         <p v-if="typingFriend.name">{{ typingFriend.name }} is typing...</p>
 
-            </v-list-tile>
         </v-list>
 
 
@@ -80,6 +80,7 @@
               v-model="message"
               label="Enter Message"
               single-line
+              @keydown="onTyping"
               @keyup.enter="sendMessage"
             ></v-text-field>
         </v-flex>
@@ -110,16 +111,34 @@
       return {
         message: null,
         activeFriend: null,
+        typingFriend: {},
+        typingClock: null,
         allMessages: [],
         users: [],
       }
     },
+
+    computed: {
+      friends() {
+        return this.users.filter((user) => {
+          return user.id !== this.user.id;
+        });
+      }
+    },
+
     watch: {
       activeFriend(val){
         this.fetchMessages();
       }
     },
+
     methods: {
+      onTyping() {
+        Echo.private('privatechat.' + this.activeFriend).whisper('typing', {
+          user: this.user
+        })
+      },
+
       sendMessage() {
         //check if there message
         if(!this.message) {
@@ -149,12 +168,13 @@
       fetchUsers() {
           axios.get('/chat/users').then(response => {
               this.users = response.data;
+              this.activeFriend = this.friends[0].id;
           });
       },
 
       scrollToEnd(){
         document.getElementById('privateMessageBox').scrollTo(0, 99999);
-      }
+      },
 
     },
 
@@ -166,10 +186,25 @@
         this.fetchUsers();
 
         Echo.private('privatechat.' + this.user.id)
+
         .listen('PrivateMessageSent',(e) => {
             this.activeFriend = e.message.user_id;
             this.fetchMessages();
             setTimeout(this.scrollToEnd, 100);
+        })
+        .listenForWhisper('typing', (e) => {
+
+            if(e.user.id == this.activeFriend) {
+              this.typingFriend = e.user;
+
+              if(this.typingClock)
+                clearTimeout();
+
+              this.typingClock = setTimeout(() => {
+                                   this.typingFriend = {};
+                                 }, 9000);
+            }
+
         });
     }
 
