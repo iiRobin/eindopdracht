@@ -25,7 +25,8 @@ import 'vuetify/dist/vuetify.min.css'
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('Chat', require('./components/Chat.vue').default);
+Vue.component('group-chat', require('./components/GroupChat.vue').default);
+Vue.component('private-chat', require('./components/PrivateChat.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

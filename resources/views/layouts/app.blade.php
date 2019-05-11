@@ -23,25 +23,28 @@
 <body>
     <div id="app">
       <v-toolbar>
-        <v-toolbar-side-icon></v-toolbar-side-icon>
-        <v-toolbar-title>Chat</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-toolbar-items class="hidden-sm-and-down">
-          @guest
-            <v-btn flat href="{{ route('login') }}">Login</v-btn>
-            <v-btn flat href="{{ route('register') }}">Register</v-btn>
-          @else
-            <v-btn flat>{{ Auth::user()->name }}</v-btn>
-            <v-btn flat v-on:click="$refs.logoutForm.submit();">Logout</v-btn>
-          @endguest
-          <form ref="logoutForm" style="display:none;" action="{{ route('logout') }}" method="POST">
-            @crsf
-          </form>
-        </v-toolbar-items>
+          <v-toolbar-title> Chat</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items class="hidden-sm-and-down">
+                  @guest
+                      <v-btn flat href="{{ route('login') }}">Login</v-btn>
+                      <v-btn flat href="{{ route('register') }}">Register</v-btn>
+                  @else
+                      <v-btn flat href="{{ route('chat.group') }}">Group</v-btn>
+                      <v-btn flat href="{{ route('chat.private') }}">Private</v-btn>
+                      <v-btn flat> {{ Auth::user()->name }}</v-btn>
+                      <v-btn flat
+                      @click=" $refs.logoutForm.submit(); ">
+                      Logout</v-btn>
+                  @endguest
+                  <form ref="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+          </v-toolbar-items>
       </v-toolbar>
 
       <main>
-          @yield('main')
+          <v-container fluid>
+              @yield('main')
+          </v-container>
       </main>
     </div>
 </body>
