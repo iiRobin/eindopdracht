@@ -14,6 +14,7 @@ Vue.use(Vuetify)
 
 import 'vuetify/dist/vuetify.min.css'
 
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -31,6 +32,20 @@ Vue.component('file-upload', VueUploadComponent);
 Vue.component('group-chat', require('./components/GroupChat.vue').default);
 Vue.component('private-chat', require('./components/PrivateChat.vue').default);
 Vue.component('message-list', require('./components/MessageList.vue').default);
+
+import moment from 'moment'
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('MM-DD-YYYY');
+  }
+});
+
+Vue.filter('formatTime', function(value) {
+  if (value) {
+    return moment(String(value)).format('hh:mm');
+  }
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

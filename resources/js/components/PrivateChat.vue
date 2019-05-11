@@ -37,7 +37,7 @@
           <v-layout :align-end="(user.id !== message.user.id)" column>
             <div class="message-wrapper">
                 <v-flex>
-                    <span class="small font-italic">{{ message.user.name }}</span>
+                    <span class="caption font-italic">{{ message.user.name }}</span>
                 </v-flex>
 
                 <div v-if="message.message" class="text-message-container">
@@ -51,7 +51,7 @@
                 </div>
 
                 <v-flex class="caption font-italic">
-                    {{ message.created_at }}
+                    Send at {{ message.created_at | formatTime }}
                 </v-flex>
             </div>
           </v-layout>
@@ -137,21 +137,21 @@
     computed: {
       friends() {
         return this.users.filter((user) => {
-          return user.id !== this.user.id;
+            return user.id !== this.user.id;
         });
       }
     },
 
     watch: {
       activeFriend(val){
-        this.fetchMessages();
+          this.fetchMessages();
       },
       files: {
         deep: true,
         handler() {
           let success = this.files[0].success;
           if(success) {
-            this.fetchMessages();
+              this.fetchMessages();
           }
         }
       },
@@ -160,17 +160,17 @@
     methods: {
       onTyping() {
         Echo.private('privatechat.' + this.activeFriend).whisper('typing', {
-          user: this.user
+            user: this.user
         })
       },
 
       sendMessage() {
         //check if there message
         if(!this.message) {
-          return alert('Please enter message');
+            return alert('Please enter message');
         }
         if(!this.activeFriend) {
-          return alert('Please select friend');
+            return alert('Please select friend');
         }
 
         axios.post('/chat/private/' + this.activeFriend, {message: this.message}).then(response => {
@@ -198,7 +198,7 @@
       },
 
       scrollToEnd(){
-        document.getElementById('privateMessageBox').scrollTo(0, 99999);
+          document.getElementById('privateMessageBox').scrollTo(0, 99999);
       },
 
       onInput(e) {
