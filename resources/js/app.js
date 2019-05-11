@@ -31,6 +31,7 @@ Vue.component('file-upload', VueUploadComponent);
 Vue.component('group-chat', require('./components/GroupChat.vue').default);
 Vue.component('private-chat', require('./components/PrivateChat.vue').default);
 Vue.component('message-list', require('./components/MessageList.vue').default);
+Vue.component('private-message-list', require('./components/PrivateMessageList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -1958,6 +1958,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var emoji_mart_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! emoji-mart-vue */ "./node_modules/emoji-mart-vue/dist/emoji-mart.js");
+/* harmony import */ var emoji_mart_vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(emoji_mart_vue__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -2043,17 +2045,48 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['user'],
+  components: {
+    Picker: emoji_mart_vue__WEBPACK_IMPORTED_MODULE_0__["Picker"]
+  },
   data: function data() {
     return {
       message: null,
+      files: [],
+      emoStatus: false,
       activeFriend: null,
       typingFriend: {},
       typingClock: null,
       allMessages: [],
       onlineFriends: [],
-      users: []
+      users: [],
+      token: document.head.querySelector('meta[name="csrf-token"]').content
     };
   },
   computed: {
@@ -2068,6 +2101,16 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     activeFriend: function activeFriend(val) {
       this.fetchMessages();
+    },
+    files: {
+      deep: true,
+      handler: function handler() {
+        var success = this.files[0].success;
+
+        if (success) {
+          this.fetchMessages();
+        }
+      }
     }
   },
   methods: {
@@ -2119,6 +2162,20 @@ __webpack_require__.r(__webpack_exports__);
     },
     scrollToEnd: function scrollToEnd() {
       document.getElementById('privateMessageBox').scrollTo(0, 99999);
+    },
+    onInput: function onInput(e) {
+      if (!e) {
+        return false;
+      }
+
+      if (!this.message) {
+        this.message = e["native"];
+      } else {
+        this.message = this.message + e["native"];
+      }
+    },
+    toggleEmo: function toggleEmo() {
+      this.emoStatus = !this.emoStatus;
     }
   },
   mounted: function mounted() {},
@@ -6653,7 +6710,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.chat-card[data-v-6a7499aa] {\r\n  margin-bottom: 140px !important;\n}\n.floating-di v[data-v-6a7499aa] {\r\n    position: fixed;\n}\n.chat-card img[data-v-6a7499aa] {\r\n    max-width: 300px;\r\n    max-height: 200px;\n}\r\n", ""]);
+exports.push([module.i, "\n.chat-card[data-v-6a7499aa] {\r\n  margin-bottom: 140px !important;\n}\n.floating-div[data-v-6a7499aa] {\r\n    position: fixed;\n}\n.image[data-v-6a7499aa] {\r\n    max-width: 300px;\r\n    max-height: 200px;\n}\r\n", ""]);
 
 // exports
 
@@ -6672,7 +6729,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.online-users[data-v-237378e0], .messages[data-v-237378e0] {\r\n  overflow-y: scroll;\r\n  height: 100vh;\n}\r\n", ""]);
+exports.push([module.i, "\n.online-users[data-v-237378e0], .messages[data-v-237378e0] {\r\n    overflow-y: scroll;\r\n    height: 100vh;\n}\n.floating-div[data-v-237378e0] {\r\n    position: fixed;\r\n    z-index: 999;\n}\n.image[data-v-237378e0] {\r\n    max-width: 300px;\r\n    max-height: 200px;\n}\r\n", ""]);
 
 // exports
 
@@ -54362,6 +54419,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
+    { staticClass: "messages" },
     _vm._l(_vm.allMessages, function(message, index) {
       return _c("v-list", { key: index, staticClass: "p-3" }, [
         _c(
@@ -54404,6 +54462,7 @@ var render = function() {
             _c("div", { staticClass: "image-container" }, [
               message.image
                 ? _c("img", {
+                    staticClass: "image",
                     attrs: { src: "/storage/" + message.image, alt: "" }
                   })
                 : _vm._e()
@@ -54507,106 +54566,113 @@ var render = function() {
       ),
       _vm._v(" "),
       _c(
+        "div",
+        { staticClass: "floating-div" },
+        [
+          _vm.emoStatus
+            ? _c("picker", {
+                attrs: { set: "emojione", title: "Pick your emoji…" },
+                on: { select: _vm.onInput }
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
         "v-flex",
-        {
-          staticClass: "messages mb-5",
-          attrs: { id: "privateMessageBox", xs9: "" }
-        },
+        { staticClass: "mb-5", attrs: { id: "privateMessageBox", xs9: "" } },
         [
           _c(
-            "v-list",
-            [
-              _vm._l(_vm.allMessages, function(message, index) {
-                return _c(
-                  "v-list-tile",
-                  { key: index, staticClass: "p-3" },
-                  [
-                    _c(
-                      "v-layout",
-                      {
-                        attrs: {
-                          "align-end": _vm.user.id !== message.user.id,
-                          column: ""
-                        }
-                      },
-                      [
-                        _c(
-                          "v-flex",
-                          [
-                            _c(
-                              "v-layout",
-                              { attrs: { column: "" } },
-                              [
-                                _c("v-flex", [
+            "div",
+            { staticClass: "messages" },
+            _vm._l(_vm.allMessages, function(message, index) {
+              return _c(
+                "v-list",
+                { key: index, staticClass: "p-3" },
+                [
+                  _c(
+                    "v-layout",
+                    {
+                      attrs: {
+                        "align-end": _vm.user.id !== message.user.id,
+                        column: ""
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "message-wrapper" },
+                        [
+                          _c("v-flex", [
+                            _c("span", { staticClass: "small font-italic" }, [
+                              _vm._v(_vm._s(message.user.name))
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          message.message
+                            ? _c(
+                                "div",
+                                { staticClass: "text-message-container" },
+                                [
                                   _c(
-                                    "span",
-                                    { staticClass: "small font-italic" },
-                                    [_vm._v(_vm._s(message.user.name))]
+                                    "v-chip",
+                                    {
+                                      attrs: {
+                                        color:
+                                          _vm.user.id === message.user_id
+                                            ? "green"
+                                            : "red",
+                                        "text-color": "white"
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                      " +
+                                          _vm._s(message.message) +
+                                          "\n                  "
+                                      )
+                                    ]
                                   )
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "v-flex",
-                                  [
-                                    _c(
-                                      "v-chip",
-                                      {
-                                        attrs: {
-                                          color:
-                                            _vm.user.id !== message.user.id
-                                              ? "red"
-                                              : "green",
-                                          "text-color": "white"
-                                        }
-                                      },
-                                      [
-                                        _c("v-list-tile-content", [
-                                          _vm._v(
-                                            "\n                    " +
-                                              _vm._s(message.message) +
-                                              "\n                  "
-                                          )
-                                        ])
-                                      ],
-                                      1
-                                    )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-flex",
-                                  { staticClass: "caption font-italic" },
-                                  [
-                                    _vm._v(
-                                      "\n                " +
-                                        _vm._s(message.created_at) +
-                                        "\n              "
-                                    )
-                                  ]
-                                )
-                              ],
-                              1
+                                ],
+                                1
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "image-container" }, [
+                            message.image
+                              ? _c("img", {
+                                  staticClass: "image",
+                                  attrs: {
+                                    src: "/storage/" + message.image,
+                                    alt: ""
+                                  }
+                                })
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("v-flex", { staticClass: "caption font-italic" }, [
+                            _vm._v(
+                              "\n                  " +
+                                _vm._s(message.created_at) +
+                                "\n              "
                             )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              }),
-              _vm._v(" "),
-              _vm.typingFriend.name
-                ? _c("p", [
-                    _vm._v(_vm._s(_vm.typingFriend.name) + " is typing...")
-                  ])
-                : _vm._e()
-            ],
-            2
+                          ])
+                        ],
+                        1
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
+            }),
+            1
           ),
+          _vm._v(" "),
+          _vm.typingFriend.name
+            ? _c("p", [_vm._v(_vm._s(_vm.typingFriend.name) + " is typing...")])
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "v-footer",
@@ -54618,19 +54684,76 @@ var render = function() {
                 [
                   _c(
                     "v-flex",
-                    {
-                      attrs: {
-                        xs6: "",
-                        "offset-xs3": "",
-                        "justify-center": "",
-                        "align-center": ""
-                      }
-                    },
+                    { staticClass: "ml-2 text-right", attrs: { xs1: "" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: {
+                            fab: "",
+                            dark: "",
+                            small: "",
+                            color: "pink"
+                          },
+                          on: { click: _vm.toggleEmo }
+                        },
+                        [_c("v-icon", [_vm._v("insert_emoticon")])],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-flex",
+                    { staticClass: "text-center", attrs: { xs1: "" } },
+                    [
+                      _c(
+                        "v-btn",
+                        {
+                          attrs: { fab: "", dark: "", small: "", color: "#333" }
+                        },
+                        [
+                          _c(
+                            "file-upload",
+                            {
+                              ref: "upload",
+                              attrs: {
+                                "post-action":
+                                  "/chat/private/" + _vm.activeFriend,
+                                headers: { "X-CSRF-TOKEN": _vm.token }
+                              },
+                              on: {
+                                "input-file": function($event) {
+                                  _vm.$refs.upload.active = true
+                                }
+                              },
+                              model: {
+                                value: _vm.files,
+                                callback: function($$v) {
+                                  _vm.files = $$v
+                                },
+                                expression: "files"
+                              }
+                            },
+                            [_c("v-icon", [_vm._v("attach_file")])],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-flex",
+                    { attrs: { xs6: "" } },
                     [
                       _c("v-text-field", {
                         attrs: {
                           rows: "2",
-                          label: "Enter Message",
+                          label: "Enter message",
                           "single-line": ""
                         },
                         on: {
@@ -54665,7 +54788,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "v-flex",
-                    { attrs: { xs2: "" } },
+                    { attrs: { xs4: "" } },
                     [
                       _c(
                         "v-btn",
@@ -94988,6 +95111,7 @@ Vue.component('file-upload', VueUploadComponent);
 Vue.component('group-chat', __webpack_require__(/*! ./components/GroupChat.vue */ "./resources/js/components/GroupChat.vue")["default"]);
 Vue.component('private-chat', __webpack_require__(/*! ./components/PrivateChat.vue */ "./resources/js/components/PrivateChat.vue")["default"]);
 Vue.component('message-list', __webpack_require__(/*! ./components/MessageList.vue */ "./resources/js/components/MessageList.vue")["default"]);
+Vue.component('private-message-list', __webpack_require__(/*! ./components/PrivateMessageList.vue */ "./resources/js/components/PrivateMessageList.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -95321,6 +95445,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PrivateChat_vue_vue_type_template_id_237378e0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/PrivateMessageList.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/PrivateMessageList.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed (from ./node_modules/vue-loader/lib/index.js):\nError: ENOENT: no such file or directory, open '/home/vagrant/projects/eindopdracht/resources/js/components/PrivateMessageList.vue'");
 
 /***/ }),
 

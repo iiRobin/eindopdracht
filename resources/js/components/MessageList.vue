@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="messages">
     <v-list class="p-3" v-for="(message, index) in allMessages" :key="index">
       <div class="message-wrapper">
           <v-flex>
@@ -13,7 +13,7 @@
           </div>
 
           <div class="image-container">
-              <img v-if="message.image" :src="'/storage/' + message.image" alt="">
+              <img class="image" v-if="message.image" :src="'/storage/' + message.image" alt="">
           </div>
 
           <v-flex class="caption font-italic">
@@ -37,10 +37,10 @@
 .chat-card {
   margin-bottom: 140px !important;
 }
-.floating-di v {
+.floating-div {
     position: fixed;
 }
-.chat-card img {
+.image {
     max-width: 300px;
     max-height: 200px;
 }

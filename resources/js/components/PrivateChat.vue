@@ -26,57 +26,81 @@
 
     </v-flex>
 
-    <v-flex id="privateMessageBox" class="messages mb-5" xs9>
-       <v-list>
-        <v-list-tile class="p-3" v-for="(message, index) in allMessages" :key="index">
+    <div class="floating-div">
+        <picker v-if="emoStatus" set="emojione" @select="onInput" title="Pick your emoji…" />
+    </div>
+
+    <v-flex id="privateMessageBox" class="mb-5" xs9>
+
+      <div class="messages">
+        <v-list class="p-3" v-for="(message, index) in allMessages" :key="index">
           <v-layout :align-end="(user.id !== message.user.id)" column>
-            <v-flex>
-              <v-layout column>
+            <div class="message-wrapper">
                 <v-flex>
-                  <span class="small font-italic">{{ message.user.name }}</span>
+                    <span class="small font-italic">{{ message.user.name }}</span>
                 </v-flex>
 
-                <v-flex>
-                  <v-chip :color="(user.id !== message.user.id) ? 'red' : 'green'" text-color="white">
+                <div v-if="message.message" class="text-message-container">
+                    <v-chip :color="(user.id === message.user_id) ? 'green' : 'red'" text-color="white">
+                        {{ message.message }}
+                    </v-chip>
+                </div>
 
-                    <v-list-tile-content >
-                      {{ message.message }}
-                    </v-list-tile-content>
-                  </v-chip>
-                </v-flex>
+                <div class="image-container">
+                    <img class="image" v-if="message.image" :src="'/storage/' + message.image" alt="">
+                </div>
 
                 <v-flex class="caption font-italic">
-                  {{ message.created_at }}
+                    {{ message.created_at }}
                 </v-flex>
-              </v-layout>
-            </v-flex>
+            </div>
           </v-layout>
-        </v-list-tile>
+        </v-list>
 
-        <p v-if="typingFriend.name">{{ typingFriend.name }} is typing...</p>
+      </div>
 
-      </v-list>
-
+      <p v-if="typingFriend.name">{{ typingFriend.name }} is typing...</p>
 
       <v-footer height="auto" fixed color="grey">
-        <v-layout row >
-          <v-flex xs6 offset-xs3 justify-center align-center>
-              <v-text-field
-                rows=2
-                v-model="message"
-                label="Enter Message"
-                single-line
-                @keydown="onTyping"
-                @keyup.enter="sendMessage"
-              ></v-text-field>
+        <v-layout row>
+          <v-flex class="ml-2 text-right" xs1>
+              <v-btn @click="toggleEmo" fab dark small color="pink">
+                  <v-icon>insert_emoticon</v-icon>
+              </v-btn>
           </v-flex>
 
-          <v-flex xs2>
-              <v-btn @click="sendMessage" dark class="mt-3 ml-2 white--text" small color="green">Send</v-btn>
+          <v-flex xs1 class="text-center">
+
+            <v-btn fab dark small color="#333">
+              <file-upload
+                :post-action="'/chat/private/'+activeFriend"
+                ref='upload'
+                v-model="files"
+                @input-file="$refs.upload.active = true"
+                :headers="{'X-CSRF-TOKEN': token}"
+              >
+                  <v-icon>attach_file</v-icon>
+              </file-upload>
+           </v-btn>
+
+          </v-flex>
+
+          <v-flex xs6>
+            <v-text-field
+              rows=2
+              v-model="message"
+              label="Enter message"
+              single-line
+              @keydown="onTyping"
+              @keyup.enter="sendMessage"
+            ></v-text-field>
+          </v-flex>
+
+          <v-flex xs4>
+            <v-btn dark class="mt-3 ml-2 white--text" small color="green" @click="sendMessage">Send</v-btn>
           </v-flex>
         </v-layout>
       </v-footer>
-
 
     </v-flex>
 
@@ -84,20 +108,29 @@
 </template>
 
 <script>
+  import { Picker } from 'emoji-mart-vue'
+
   export default {
     props:[
       'user'
     ],
 
+    components: {
+      Picker
+    },
+
     data () {
       return {
         message: null,
+        files: [],
+        emoStatus: false,
         activeFriend: null,
         typingFriend: {},
         typingClock: null,
         allMessages: [],
         onlineFriends: [],
         users: [],
+        token:document.head.querySelector('meta[name="csrf-token"]').content
       }
     },
 
@@ -112,7 +145,16 @@
     watch: {
       activeFriend(val){
         this.fetchMessages();
-      }
+      },
+      files: {
+        deep: true,
+        handler() {
+          let success = this.files[0].success;
+          if(success) {
+            this.fetchMessages();
+          }
+        }
+      },
     },
 
     methods: {
@@ -158,6 +200,21 @@
       scrollToEnd(){
         document.getElementById('privateMessageBox').scrollTo(0, 99999);
       },
+
+      onInput(e) {
+        if(!e) {
+          return false;
+        }
+        if(!this.message) {
+          this.message=e.native;
+        } else {
+          this.message=this.message + e.native;
+        }
+      },
+
+      toggleEmo(){
+          this.emoStatus= !this.emoStatus;
+      }
 
     },
 
@@ -207,7 +264,15 @@
 
 <style scoped>
 .online-users, .messages {
-  overflow-y: scroll;
-  height: 100vh;
+    overflow-y: scroll;
+    height: 100vh;
+}
+.floating-div {
+    position: fixed;
+    z-index: 999;
+}
+.image {
+    max-width: 300px;
+    max-height: 200px;
 }
 </style>

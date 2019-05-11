@@ -45,7 +45,6 @@ class MessageController extends Controller
         $message = Message::create([
           'user_id' => Auth::id(),
           'image' => substr($filename, 7)
-          //'receiver_id' => request('receiver')
         ]);
       } else {
         $message = Auth::user()->messages()->create(['message' => $request->message]);
@@ -82,7 +81,17 @@ class MessageController extends Controller
         // Create variables
         $input = $request->all();
         $input['receiver_id'] = $user->id;
-        $message = auth()->user()->messages()->create($input);
+        if(request()->has('file'))
+        {
+          $filename = $request->file->store('public/chat');
+          $message = Message::create([
+            'user_id' => Auth::id(),
+            'image' => substr($filename, 7),
+            'receiver_id' => $user->id
+          ]);
+        } else {
+          $message = Auth::user()->messages()->create($input);
+        }
 
         // Broadcast to screen
         broadcast(new PrivateMessageSent($message->load('user')))->toOthers();
