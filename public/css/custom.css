@@ -67,6 +67,15 @@
   background-color: #2b9217;
 }
 
+.remove-btn {
+  border-radius: 15px;
+  background-color: #FF0000;
+}
+
+.remove-btn:hover {
+  background-color: #DC143C;
+}
+
 .sidebar {
   margin-left: 3.3% !important;
   height: 500px !important;

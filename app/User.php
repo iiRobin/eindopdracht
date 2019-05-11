@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Auth;
+use App\Traits\Friendable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,6 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends \TCG\Voyager\Models\User
 {
     use Notifiable;
+
+    use Friendable;
 
     /**
      * The attributes that are mass assignable.
@@ -42,6 +46,38 @@ class User extends \TCG\Voyager\Models\User
      */
     public function messages()
     {
-      return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Get all friend requests
+     */
+    public function requests()
+    {
+        return $this->hasMany(Friendship::class, 'user_requested')->where('status', 'requested');
+    }
+
+    /**
+     * Check if the user has send a friend request
+     */
+    public function isRequested($user_id)
+    {
+      return $this->requests->contains('requester', $user_id);
+    }
+
+    /**
+     * Get all friends
+     */
+    public function friends()
+    {
+        return $this->hasMany(Friendship::class, 'requester')->where('status', 'accepted');
+    }
+
+    /**
+     * Check if the user is friends
+     */
+    public function isFriend($user_id)
+    {
+      return $this->friends->contains('user_requested', $user_id);
     }
 }

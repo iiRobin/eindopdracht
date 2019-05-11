@@ -19,9 +19,12 @@
             <div class="uk-navbar-right">
 
               <ul class="uk-navbar-nav subnav-items">
-                <li {{ $user->id == Auth::id() ? 'hidden' : null }}>
-                  <a href="#" class="add-btn">
-                    <i style="font-size: 15px;" class="fas fa-user-plus"></i>&nbsp; Add friend
+                <li class="add-friend" {{ $user->id == Auth::id() ? 'hidden' : null }}>
+                  <a href=""
+                     class="{{ (Auth::user()->isFriend($user->id)) ? 'remove-btn' : 'add-btn' }}"
+                     data-user="{{ $user->id }}"
+                     uk-tooltip="{{ (Auth::user()->isFriend($user->id)) ? 'Remove friend' : 'Add friend' }}">
+                    <i style="font-size: 15px;" class="fas fa-user-plus"></i>&nbsp; {{ (Auth::user()->isFriend($user->id)) ? 'Remove friend' : 'Add friend' }}
                   </a>
                 </li>
               </ul>
@@ -52,5 +55,6 @@
 @endsection
 
 @section('scripts.footer')
-
+  <script src="/js/addFriend.js"></script>
+  <script src="/js/removeFriend.js"></script>
 @endsection

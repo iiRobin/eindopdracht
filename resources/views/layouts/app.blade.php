@@ -58,10 +58,10 @@
           </v-container>
       </main>
 
-      @hasSection('scripts.footer')
-          @yield('scripts.footer')
-      @endif
-
     </div>
+    
+    @hasSection('scripts.footer')
+        @yield('scripts.footer')
+    @endif
 </body>
 </html>
