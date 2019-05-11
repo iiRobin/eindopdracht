@@ -1,52 +1,55 @@
 <template>
   <v-layout>
     <v-flex xs12 sm6 offset-sm3>
-      <v-card class="mb-5 chat-card" dark="">
+      <v-card class="chat-card" >
         <v-list>
           <v-subheader>
-            Group Chat
+              Group Chat
           </v-subheader>
           <v-divider></v-divider>
-          <v-list-tile class="p-3" v-for="(message, index) in allMessages" :key="index">
 
-            <v-layout :align-end="(user.id !== message.user.id)" column>
-              <v-flex>
-                <v-layout column>
-                  <v-flex>
-                    <span class="small font-italic">{{ message.user.name }}</span>
-                  </v-flex>
-
-                  <v-flex>
-                    <v-chip :color="(user.id === message.user.id) ? 'red' : 'green'" text-color="white">
-                      <v-list-tile-content>
-                        {{ message.message }}
-                      </v-list-tile-content>
-                    </v-chip>
-                  </v-flex>
-
-                  <v-flex class="caption font-italic">
-                    {{ message.created_at }}
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-
-          </v-list-tile>
+          <message-list :user="user" :all-messages="allMessages"></message-list>
         </v-list>
       </v-card>
     </v-flex>
 
+    <div class="floating-div">
+        <picker v-if="emoStatus" set="emojione" @select="onInput" title="Pick your emoji…" />
+    </div>
+
     <v-footer height="auto" fixed color="grey">
       <v-layout row>
-        <v-flex xs6 offset-xs3 justify-center align-center>
-          <v-text-field rows=2
-                        v-model="message"
-                        label="Enter message"
-                        single-line
-                        @keyup.enter="sendMessage"></v-text-field>
+        <v-flex class="ml-2 text-right" xs1>
+            <v-btn @click="toggleEmo" fab dark small color="pink">
+                <v-icon>insert_emoticon</v-icon>
+            </v-btn>
         </v-flex>
 
-        <v-flex>
+        <v-flex xs1 class="text-center">
+
+          <v-btn fab dark small color="#333">
+           <file-upload
+             post-action="/messages"
+             ref='upload'
+             @input-file="$refs.upload.active = true"
+             :headers="{'X-CSRF-TOKEN': token}"
+           >
+               <v-icon>attach_file</v-icon>
+           </file-upload>
+         </v-btn>
+
+        </v-flex>
+
+        <v-flex xs6>
+          <v-text-field
+            rows=2
+            v-model="message"
+            label="Enter message"
+            single-line
+            @keyup.enter="sendMessage"></v-text-field>
+        </v-flex>
+
+        <v-flex xs4>
           <v-btn dark class="mt-3 ml-2 white--text" small color="green" @click="sendMessage">Send</v-btn>
         </v-flex>
       </v-layout>
@@ -56,16 +59,27 @@
 </template>
 
 <script>
+import { Picker } from 'emoji-mart-vue'
+import MessageList from './MessageList'
+
 export default {
 
   props:[
     'user'
   ],
 
+  components: {
+    Picker,
+    MessageList
+  },
+
   data() {
     return {
       message: null,
-      allMessages: []
+      emoStatus: false,
+      myText: null,
+      allMessages: [],
+      token:document.head.querySelector('meta[name="csrf-token"]').content
     }
   },
 
@@ -80,6 +94,7 @@ export default {
       axios.post('/messages', {message: this.message}).then(response => {
         this.fetchMessages();
         this.message = null;
+        this.emoStatus = false;
         setTimeout(this.scrollToEnd, 100);
       }).catch(error => {
         console.log(error.response)
@@ -95,6 +110,19 @@ export default {
     },
     scrollToEnd() {
       window.scrollTo(0, 99999);
+    },
+    onInput(e) {
+      if(!e) {
+        return false;
+      }
+      if(!this.message) {
+        this.message=e.native;
+      } else {
+        this.message=this.message + e.native;
+      }
+    },
+    toggleEmo(){
+        this.emoStatus= !this.emoStatus;
     }
   },
 
@@ -115,8 +143,15 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
+<style scoped>
 .chat-card {
   margin-bottom: 140px !important;
+}
+.floating-div {
+    position: fixed;
+}
+.chat-card img {
+    max-width: 300px;
+    max-height: 200px;
 }
 </style>

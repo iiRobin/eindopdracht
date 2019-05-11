@@ -9,7 +9,9 @@
             @click="activeFriend = friend.id"
           >
             <v-list-tile-action>
-              <v-icon color="green">account_circle</v-icon>
+              <v-icon :color="(onlineFriends.find(onlineFriends => onlineFriends.id == friend.id)) ? 'green' : 'red'">
+                account_circle
+              </v-icon>
             </v-list-tile-action>
 
             <v-list-tile-content>
@@ -26,74 +28,54 @@
 
     <v-flex id="privateMessageBox" class="messages mb-5" xs9>
        <v-list>
-            <v-list-tile
-              class="p-3"
-              v-for="(message, index) in allMessages"
-              :key="index"
-            >
+        <v-list-tile class="p-3" v-for="(message, index) in allMessages" :key="index">
+          <v-layout :align-end="(user.id !== message.user.id)" column>
+            <v-flex>
+              <v-layout column>
+                <v-flex>
+                  <span class="small font-italic">{{ message.user.name }}</span>
+                </v-flex>
 
-           <v-layout
-           :align-end="(user.id !== message.user.id)"
-            column
-           >
-             <v-flex>
-               <v-layout column>
-                  <v-flex>
-                    <span class="small font-italic">{{ message.user.name }}</span>
-                  </v-flex>
+                <v-flex>
+                  <v-chip :color="(user.id !== message.user.id) ? 'red' : 'green'" text-color="white">
 
-                  <v-flex>
-                    <v-chip
-                      :color="(user.id!==message.user.id)?'red':'green'"
-                      text-color="white"
-                    >
+                    <v-list-tile-content >
+                      {{ message.message }}
+                    </v-list-tile-content>
+                  </v-chip>
+                </v-flex>
 
-                      <v-list-tile-content >
-                        {{ message.message }}
-                      </v-list-tile-content>
-                    </v-chip>
-                  </v-flex>
+                <v-flex class="caption font-italic">
+                  {{ message.created_at }}
+                </v-flex>
+              </v-layout>
+            </v-flex>
+          </v-layout>
+        </v-list-tile>
 
-                  <v-flex class="caption font-italic">
-                    {{ message.created_at }}
-                  </v-flex>
-               </v-layout>
-             </v-flex>
-           </v-layout>
-         </v-list-tile>
+        <p v-if="typingFriend.name">{{ typingFriend.name }} is typing...</p>
 
-         <p v-if="typingFriend.name">{{ typingFriend.name }} is typing...</p>
-
-        </v-list>
+      </v-list>
 
 
-      <v-footer
+      <v-footer height="auto" fixed color="grey">
+        <v-layout row >
+          <v-flex xs6 offset-xs3 justify-center align-center>
+              <v-text-field
+                rows=2
+                v-model="message"
+                label="Enter Message"
+                single-line
+                @keydown="onTyping"
+                @keyup.enter="sendMessage"
+              ></v-text-field>
+          </v-flex>
 
-      height="auto"
-      fixed
-      color="grey"
-      >
-      <v-layout row >
-        <v-flex xs6 offset-xs3 justify-center align-center>
-            <v-text-field
-              rows=2
-              v-model="message"
-              label="Enter Message"
-              single-line
-              @keydown="onTyping"
-              @keyup.enter="sendMessage"
-            ></v-text-field>
-        </v-flex>
-
-        <v-flex xs2>
-            <v-btn
-              @click="sendMessage"
-             dark class="mt-3 ml-2 white--text" small color="green">Send</v-btn>
-        </v-flex>
-      </v-layout>
-
-
-    </v-footer>
+          <v-flex xs2>
+              <v-btn @click="sendMessage" dark class="mt-3 ml-2 white--text" small color="green">Send</v-btn>
+          </v-flex>
+        </v-layout>
+      </v-footer>
 
 
     </v-flex>
@@ -114,6 +96,7 @@
         typingFriend: {},
         typingClock: null,
         allMessages: [],
+        onlineFriends: [],
         users: [],
       }
     },
@@ -185,15 +168,27 @@
     created(){
         this.fetchUsers();
 
-        Echo.private('privatechat.' + this.user.id)
+        Echo.join(`pchat`)
+        .here((users) => {
+            console.log(users);
+            this.onlineFriends = users;
+        })
+        .joining((user) => {
+            this.onlineFriends.push(user);
+            console.log(user.name);
+        })
+        .leaving((user) => {
+            this.onlineFriends.splice(this.onlineFriends.indexOf(user), 1);
+            console.log(user.name);
+        });
 
+        Echo.private('privatechat.' + this.user.id)
         .listen('PrivateMessageSent',(e) => {
             this.activeFriend = e.message.user_id;
             this.fetchMessages();
             setTimeout(this.scrollToEnd, 100);
         })
         .listenForWhisper('typing', (e) => {
-
             if(e.user.id == this.activeFriend) {
               this.typingFriend = e.user;
 
@@ -202,9 +197,8 @@
 
               this.typingClock = setTimeout(() => {
                                    this.typingFriend = {};
-                                 }, 9000);
+                                 }, 6000);
             }
-
         });
     }
 

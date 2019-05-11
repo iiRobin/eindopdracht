@@ -8,6 +8,7 @@ use App\Message;
 use App\Events\MessageSent;
 use App\Events\PrivateMessageSent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class MessageController extends Controller
 {
@@ -38,9 +39,19 @@ class MessageController extends Controller
      */
     public function sendMessage(Request $request)
     {
-      $message = auth()->user()->message()->create(['message' => $request->message]);
+      if(request()->has('file'))
+      {
+        $filename = $request->file->store('public/chat');
+        $message = Message::create([
+          'user_id' => Auth::id(),
+          'image' => substr($filename, 7)
+          //'receiver_id' => request('receiver')
+        ]);
+      } else {
+        $message = Auth::user()->messages()->create(['message' => $request->message]);
+      }
 
-      broadcast(new MessageSent(auth()->user(), $message->load('user')))->toOthers();
+      broadcast(new MessageSent(Auth::user(), $message->load('user')))->toOthers();
 
       return response(['status' => 'Message sent successfully']);
     }

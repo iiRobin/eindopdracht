@@ -25,8 +25,12 @@ import 'vuetify/dist/vuetify.min.css'
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+const VueUploadComponent = require('vue-upload-component');
+Vue.component('file-upload', VueUploadComponent);
+
 Vue.component('group-chat', require('./components/GroupChat.vue').default);
 Vue.component('private-chat', require('./components/PrivateChat.vue').default);
+Vue.component('message-list', require('./components/MessageList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
