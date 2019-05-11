@@ -1,0 +1,83 @@
+/* #################### Styles for profile. #################### */
+
+.header {
+  height: 25%;
+  width: 100%;
+  background-color: #777;
+  border-top: 2px solid #555;
+}
+
+.add-background-img {
+  height: 40px;
+  width: 60px;
+  background-color: black;
+  border: 1px solid #333;
+  opacity: 0.6;
+  text-align: center;
+}
+
+.add-background-img > i {
+  color: #fefefe;
+  font-size: 25px;
+  transition: .2s;
+  margin-top: 5px;
+}
+
+.add-background-img:hover > i {
+  margin-top: 8px;
+  font-size: 20px;
+}
+
+.avatar {
+  height: 200%;
+  margin-left: 40px;
+  margin-top: -80px;
+  border: 2px solid #555;
+  border-radius: 500px;
+  -webkit-border-radius: 500px;
+  -moz-border-radius: 500px;
+}
+
+.subnav {
+  background: none !important;
+}
+
+.display-name {
+  margin-left: 18%;
+  font-size: 25px;
+}
+
+.subnav-items > li {
+  margin-top: 10px;
+  margin-right: 50px;
+}
+
+.subnav-items > li > a {
+  color: #fefefe !important;
+  min-height: 0 !important;
+  height: 50px !important;
+}
+
+.add-btn {
+  border-radius: 15px;
+  background-color: #36a420;
+}
+
+.add-btn:hover {
+  background-color: #2b9217;
+}
+
+.sidebar {
+  margin-left: 3.3% !important;
+  height: 500px !important;
+  width: 25% !important;
+}
+
+.sidebar h3 {
+  margin-left: 25px;
+}
+
+.sidebar > .info > p > i {
+  margin-left: -25px !important;
+  font-size: 15px;
+}

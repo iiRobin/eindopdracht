@@ -14,7 +14,7 @@ class ChatController extends Controller
      */
     public function showGroup()
     {
-      return view('group');
+      return view('modules.chat.group');
     }
 
     /**
@@ -24,7 +24,7 @@ class ChatController extends Controller
      */
     public function showPrivate()
     {
-      return view('private');
+      return view('modules.chat.private');
     }
 
     /**

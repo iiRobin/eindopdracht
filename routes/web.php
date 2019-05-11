@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/home', 'HomeController@index')->name('home');
+
+/* #################### Chat routes. #################### */
+
 Route::group(['prefix' => '/chat', 'as' => 'chat.'], function() {
 
   Route::get('/group', ['as' => 'group', 'uses' => 'ChatController@showGroup']);
@@ -25,18 +29,24 @@ Route::group(['prefix' => '/chat', 'as' => 'chat.'], function() {
 
 });
 
+Route::get('messages', 'MessageController@fetchMessages');
+Route::post('messages', 'MessageController@sendMessage');
 
+/* #################### Profile routes. #################### */
+Route::group(['prefix' => '/profile', 'as' => 'profile.'], function() {
+
+  Route::get('/', ['as' => 'index', 'uses' => 'ProfileController@showProfile']);
+
+});
+
+/* #################### Voyager admin routes. #################### */
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
+/* #################### Authentication routes. #################### */
 Auth::routes();
 
 Route::get('logout', 'Auth\LoginController@logout', function () {
     return abort(404);
 });
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('messages', 'MessageController@fetchMessages');
-Route::post('messages', 'MessageController@sendMessage');
