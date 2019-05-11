@@ -95111,7 +95111,6 @@ Vue.component('file-upload', VueUploadComponent);
 Vue.component('group-chat', __webpack_require__(/*! ./components/GroupChat.vue */ "./resources/js/components/GroupChat.vue")["default"]);
 Vue.component('private-chat', __webpack_require__(/*! ./components/PrivateChat.vue */ "./resources/js/components/PrivateChat.vue")["default"]);
 Vue.component('message-list', __webpack_require__(/*! ./components/MessageList.vue */ "./resources/js/components/MessageList.vue")["default"]);
-Vue.component('private-message-list', __webpack_require__(/*! ./components/PrivateMessageList.vue */ "./resources/js/components/PrivateMessageList.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -95445,17 +95444,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_PrivateChat_vue_vue_type_template_id_237378e0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
-
-/***/ }),
-
-/***/ "./resources/js/components/PrivateMessageList.vue":
-/*!********************************************************!*\
-  !*** ./resources/js/components/PrivateMessageList.vue ***!
-  \********************************************************/
-/*! exports provided: default */
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/vue-loader/lib/index.js):\nError: ENOENT: no such file or directory, open '/home/vagrant/projects/eindopdracht/resources/js/components/PrivateMessageList.vue'");
 
 /***/ }),
 
