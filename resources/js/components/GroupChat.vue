@@ -8,7 +8,7 @@
           </v-subheader>
           <v-divider></v-divider>
 
-          <message-list :user="user" :all-messages="allMessages"></message-list>
+          <message-list :user="user" :all-messages="groupMessages"></message-list>
         </v-list>
       </v-card>
     </v-flex>
@@ -79,6 +79,7 @@ export default {
       emoStatus: false,
       myText: null,
       allMessages: [],
+      groupMessages: [],
       token:document.head.querySelector('meta[name="csrf-token"]').content
     }
   },
@@ -103,9 +104,14 @@ export default {
     fetchMessages() {
       // Get the messages
       axios.get('/messages').then(response => {
-        this.allMessages = response.data;
+        let groupMessages = [];
+        $.each(response.data, function(key, message) {
+          if(message.receiver_id == null)
+            groupMessages.push(message);
+        });
+        this.groupMessages = groupMessages;
       }).catch(error => {
-        console.log(error.response)
+        console.log(error);
       });
     },
     scrollToEnd() {
@@ -116,9 +122,9 @@ export default {
         return false;
       }
       if(!this.message) {
-        this.message=e.native;
+        this.message = e.native;
       } else {
-        this.message=this.message + e.native;
+        this.message = this.message + e.native;
       }
     },
     toggleEmo(){

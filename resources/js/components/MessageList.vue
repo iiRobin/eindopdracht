@@ -17,7 +17,7 @@
           </div>
 
           <v-flex class="caption font-italic">
-              {{ message.created_at }}
+              Send at {{ message.created_at | formatTime }}
           </v-flex>
       </div>
     </v-list>
