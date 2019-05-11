@@ -10,16 +10,16 @@
         </div>
         <div class="uk-position-bottom-right header">
           <div class="uk-position-left">
-            <img class="avatar" src="storage/{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}'s avatar">
+            <img class="avatar" src="{{ asset('storage') .'/'. $user->avatar }}" alt="{{ $user->name }}'s avatar">
           </div>
           <div class="uk-position-left display-name">
-            <p>{{ Auth::user()->name }}</p>
+            <p>{{ $user->name }}</p>
           </div>
           <nav class="uk-navbar-container subnav" uk-navbar>
             <div class="uk-navbar-right">
 
               <ul class="uk-navbar-nav subnav-items">
-                <li>
+                <li {{ $user->id == Auth::id() ? 'hidden' : null }}>
                   <a href="#" class="add-btn">
                     <i style="font-size: 15px;" class="fas fa-user-plus"></i>&nbsp; Add friend
                   </a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -21,8 +22,8 @@ class ProfileController extends Controller
      *
      * @return \Illuminate\Http\Response.
      */
-    public function showProfile()
+    public function showProfile(User $user)
     {
-        return view('modules.profile.index');
+        return view('modules.profile.index', compact('user'));
     }
 }

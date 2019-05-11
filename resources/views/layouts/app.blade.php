@@ -43,7 +43,7 @@
                   @else
                       <v-btn flat href="{{ route('chat.group') }}">Group</v-btn>
                       <v-btn flat href="{{ route('chat.private') }}">Private</v-btn>
-                      <v-btn flat> {{ Auth::user()->name }}</v-btn>
+                      <v-btn flat href="{{ route('profile.index', ['user' => Auth::id() ]) }}"> {{ Auth::user()->name }}</v-btn>
                       <v-btn flat
                       @click=" $refs.logoutForm.submit(); ">
                       Logout</v-btn>

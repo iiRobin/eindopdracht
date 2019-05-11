@@ -35,7 +35,7 @@ Route::post('messages', 'MessageController@sendMessage');
 /* #################### Profile routes. #################### */
 Route::group(['prefix' => '/profile', 'as' => 'profile.'], function() {
 
-  Route::get('/', ['as' => 'index', 'uses' => 'ProfileController@showProfile']);
+  Route::get('/{user}', ['as' => 'index', 'uses' => 'ProfileController@showProfile']);
 
 });
 
