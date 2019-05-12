@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-	$('.add-friend').on('click', 'a.remove-btn', function(e){
+	$('.friend').on('click', 'a.remove-btn', function(e){
 		e.preventDefault();
 
 		// Prepare data.
@@ -18,9 +18,8 @@ jQuery(document).ready(function($) {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				if(data == true){
-
-				}
+				$('.friend a').remove();
+				$('.friend').append('<p style="font-size:20px;">Friend has been removed!</p>');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);

@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-	$('.friend').on('click', 'a.add-btn', function(e){
+	$('.requests').on('click', 'a.accept-btn', function(e){
 		e.preventDefault();
 
 		// Prepare data.
@@ -11,15 +11,14 @@ jQuery(document).ready(function($) {
 		// Send request through ajax.
 		$.ajax({
 			type: 'post',
-			url: '/profile/'+user+'/add',
+			url: '/profile/'+user+'/accept',
 			data: data,
 			dataType: "json",
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				$('.friend a').remove();
-				$('.friend').append('<p style="font-size:20px;">Friend request send!</p>');
+				$('.request-' + user).remove();
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);

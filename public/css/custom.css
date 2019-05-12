@@ -76,17 +76,27 @@
   background-color: #DC143C;
 }
 
-.sidebar {
-  margin-left: 3.3% !important;
-  height: 500px !important;
-  width: 25% !important;
+.accept-btn {
+  text-transform: none !important;
+  border-radius: 15px;
+  background-color: #1E90FF !important;
 }
 
-.sidebar h3 {
-  margin-left: 25px;
+.accept-btn:hover {
+  border-radius: 15px;
+  background-color: #4169E1 !important;
 }
 
-.sidebar > .info > p > i {
-  margin-left: -25px !important;
-  font-size: 15px;
+.requests-btn {
+  border-radius: 15px;
+  text-transform: none !important;
+}
+
+.friends-btn {
+  border-radius: 15px;
+  text-transform: none !important;
+}
+
+.badge {
+  background: #444 !important;
 }

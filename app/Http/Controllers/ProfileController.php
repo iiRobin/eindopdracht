@@ -68,5 +68,15 @@ class ProfileController extends Controller
         return Auth::user()->deleteFriend($user->id);
     }
 
+    /**
+     * Accept a user's friendrequest.
+     *
+     * @return \Illuminate\Http\Response.
+     */
+    public function acceptFriendRequest(User $user)
+    {
+        return Auth::user()->acceptFriend($user->id);
+    }
+
 
 }

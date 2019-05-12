@@ -45,6 +45,7 @@ Route::group(['prefix' => '/profile', 'as' => 'profile.'], function() {
   Route::get('/{user}', ['as' => 'index', 'uses' => 'ProfileController@showProfile']);
   Route::post('/{user}/add', ['as' => 'addfriend', 'uses' => 'ProfileController@sendFriendRequest']);
   Route::post('/{user}/remove', ['as' => 'removefriend', 'uses' => 'ProfileController@removeFriend']);
+  Route::post('/{user}/accept', ['as' => 'acceptfriend', 'uses' => 'ProfileController@acceptFriendRequest']);
 
 });
 
