@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-	$('.friend').on('click', 'a.remove-btn', function(e){
+	$('.unfriend').on('click', 'button.remove-btn', function(e){
 		e.preventDefault();
 
 		// Prepare data.
@@ -18,8 +18,8 @@ jQuery(document).ready(function($) {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				$('.friend a').remove();
-				$('.friend').append('<p style="font-size:20px;">Friend has been removed!</p>');
+				$('.unfriend button.remove-btn').remove();
+				$('.unfriend').append('<button class="uk-button">Friend deleted!</button>');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);

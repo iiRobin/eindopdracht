@@ -1,19 +1,37 @@
-<nav class="uk-navbar-container subnav" uk-navbar>
+<nav class="uk-navbar-container subnav" uk-navbar="mode: click">
   <div class="uk-navbar-right">
 
     <ul class="uk-navbar-nav subnav-items">
       @if($user->id !== Auth::id())
         <li class="friend">
-          @if(!$user->isRequested(Auth::id()))
-            <a href=""
-               class="{{ (Auth::user()->isFriend($user->id)) ? 'remove-btn' : 'add-btn' }}"
-               data-user="{{ $user->id }}"
-               uk-tooltip="{{ (Auth::user()->isFriend($user->id)) ? 'Remove friend' : 'Add friend' }}">
-              <i style="font-size:15px;" class="{{ (Auth::user()->isFriend($user->id)) ? 'fas fa-user-minus' : 'fas fa-user-plus' }}"></i>&nbsp; {{ (Auth::user()->isFriend($user->id)) ? 'Remove friend' : 'Add friend' }}
+          @if(!Auth::user()->isFriend($user->id))
+            <a href="#confirmModal" class="add-friend-btn" data-user="{{ $user->id }}" uk-toggle>
+              <i style="font-size:16px;" class="fas fa-user-plus"></i>&nbsp;Add friend
             </a>
           @else
-            <p style="font-size:18px;">You already sent this user a friendrequest!</p>
+            <a href="#" data-user="{{ $user->id }}">
+              Send message
+            </a>
           @endif
+        </li>
+        <li>
+          <a class="more-btn" href="#">More <span uk-icon="icon: chevron-down"></span></a>
+          <div class="uk-navbar-dropdown more-nav">
+            <ul class="uk-nav uk-navbar-dropdown-nav">
+              <li>
+                <a href="#blockModal" class="block-btn" data-user="{{ $user->id }}" uk-toggle>
+                  <span uk-icon="icon: ban"></span> Block this person
+                </a>
+              </li>
+              @if(Auth::user()->isFriend($user->id))
+                <li>
+                  <a href="#removeModal" class="remove-friend-btn" data-user="{{ $user->id }}" uk-toggle>
+                    <i style="font-size:16px;" class="fas fa-user-minus"></i> Remove friend
+                  </a>
+                </li>
+              @endif
+            </ul>
+          </div>
         </li>
       @else
         <li>

@@ -3,7 +3,7 @@
 .header {
   height: 25%;
   width: 100%;
-  background-color: #777;
+  background-color: #fff;
   border-top: 2px solid #555;
 }
 
@@ -45,6 +45,11 @@
 .display-name {
   margin-left: 18%;
   font-size: 25px;
+  z-index: 9999;
+}
+
+.display-name > p > a:hover {
+  color: inherit !important;
 }
 
 .subnav-items > li {
@@ -53,27 +58,13 @@
 }
 
 .subnav-items > li > a {
-  color: #fefefe !important;
+  color: #333 !important;
   min-height: 0 !important;
   height: 50px !important;
 }
 
-.add-btn {
+.add-friend-btn {
   border-radius: 15px;
-  background-color: #36a420;
-}
-
-.add-btn:hover {
-  background-color: #2b9217;
-}
-
-.remove-btn {
-  border-radius: 15px;
-  background-color: #FF0000;
-}
-
-.remove-btn:hover {
-  background-color: #DC143C;
 }
 
 .accept-btn {
@@ -87,16 +78,38 @@
   background-color: #4169E1 !important;
 }
 
+.more-btn {
+  color: #333 !important;
+}
+
 .requests-btn {
   border-radius: 15px;
-  text-transform: none !important;
+  background: none !important;
+}
+
+.requests-btn:hover {
+  color: #555 !important;
 }
 
 .friends-btn {
   border-radius: 15px;
-  text-transform: none !important;
+  background: none !important;
+}
+
+.friends-btn:hover {
+  color: #555 !important;
 }
 
 .badge {
   background: #444 !important;
+}
+
+.more-nav {
+  top: 58.3px !important;
+  left: 960px !important;
+  background: #fff !important;
+}
+
+.more-nav > ul > li > a {
+  color: #333 !important;
 }

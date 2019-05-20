@@ -1,6 +1,6 @@
 jQuery(document).ready(function($) {
 
-	$('.friend').on('click', 'a.add-btn', function(e){
+	$('.add-friend').on('click', 'button.add-btn', function(e){
 		e.preventDefault();
 
 		// Prepare data.
@@ -18,8 +18,8 @@ jQuery(document).ready(function($) {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				$('.friend a').remove();
-				$('.friend').append('<p style="font-size:20px;">Friend request send!</p>');
+				$('.add-friend button.add-btn').remove();
+				$('.add-friend').append('<button class="uk-button">Request send!</button>');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);
