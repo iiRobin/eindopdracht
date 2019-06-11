@@ -18,8 +18,7 @@ jQuery(document).ready(function($) {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				$('.add-friend button.add-btn').remove();
-				$('.add-friend').append('<button class="uk-button">Request send!</button>');
+				location.reload();
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);

@@ -18,8 +18,7 @@ jQuery(document).ready(function($) {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
 			success: function(data){
-				$('.unfriend button.remove-btn').remove();
-				$('.unfriend').append('<button class="uk-button">Friend deleted!</button>');
+				location.reload();
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				console.log(errorThrown);

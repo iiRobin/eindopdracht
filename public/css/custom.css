@@ -8,7 +8,7 @@
 }
 
 .add-background-img {
-  height: 40px;
+  height: 35px;
   width: 60px;
   background-color: black;
   border: 1px solid #333;
@@ -16,16 +16,24 @@
   text-align: center;
 }
 
-.add-background-img > i {
+.add-background-img > a {
   color: #fefefe;
   font-size: 25px;
   transition: .2s;
   margin-top: 5px;
 }
 
-.add-background-img:hover > i {
-  margin-top: 8px;
-  font-size: 20px;
+.editDropdown {
+  padding: 10px !important;
+  top: 30px !important;
+  min-height: 35px !important;
+  min-width: 150px !important;
+}
+
+input[type=file] {
+    display:block;
+    height:0;
+    width:0;
 }
 
 .avatar {
@@ -67,17 +75,6 @@
   border-radius: 15px;
 }
 
-.accept-btn {
-  text-transform: none !important;
-  border-radius: 15px;
-  background-color: #1E90FF !important;
-}
-
-.accept-btn:hover {
-  border-radius: 15px;
-  background-color: #4169E1 !important;
-}
-
 .more-btn {
   color: #333 !important;
 }
@@ -112,4 +109,64 @@
 
 .more-nav > ul > li > a {
   color: #333 !important;
+}
+
+.editProfile div p {
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 28px;
+  margin-left: -90px;
+}
+
+.editProfile div i {
+  margin-bottom: 5px;
+  margin-left: 65px;
+  font-size: 15px;
+}
+
+.editProfile .inputs {
+  margin-left: -130px;
+}
+
+.info {
+  padding: 25px 25px !important;
+}
+
+.info div i {
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.infoCard p {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 5px;
+  margin-left: -75px;
+}
+
+.postarea {
+  height: 65px;
+  width: 125%;
+  padding-right: 40px;
+}
+.postarea:focus {
+  outline: none;
+}
+
+.postform {
+  margin-left: -75%;
+}
+
+.post-btn {
+  padding: 0px !important;
+}
+
+.post-btn a:hover {
+  text-decoration: none;
+}
+
+.liked svg path {
+  fill: #FF2D00;
+  stroke: #A01D00 !important;
 }

@@ -36,12 +36,12 @@
       @else
         <li>
           <a href="{{ route('profile.requests') }}" class="requests-btn uk-button uk-button-secondary">
-            Friendrequests &nbsp;<span class="badge uk-badge">{{ count(Auth::user()->requests) }}</span>
+            Friend requests &nbsp;<span class="badge uk-badge badge-requests">{{ count(Auth::user()->requests) }}</span>
           </a>
         </li>
         <li>
           <a href="{{ route('profile.friends') }}" class="friends-btn uk-button uk-button-secondary">
-            Friends &nbsp;<span class="badge uk-badge">{{ count(Auth::user()->friends) }}</span>
+            Friends &nbsp;<span class="badge uk-badge badge-friends">{{ count(Auth::user()->friends) }}</span>
           </a>
         </li>
       @endif

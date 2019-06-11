@@ -20,7 +20,8 @@ class User extends \TCG\Voyager\Models\User
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'avatar', 'header_image',
+        'residence', 'workplace', 'school', 'birthplace', 'relationship'
     ];
 
     /**
@@ -62,7 +63,7 @@ class User extends \TCG\Voyager\Models\User
      */
     public function isRequested($user_id)
     {
-      return $this->requests->contains('requester', $user_id);
+        return $this->requests->contains('requester', $user_id);
     }
 
     /**
@@ -78,6 +79,22 @@ class User extends \TCG\Voyager\Models\User
      */
     public function isFriend($user_id)
     {
-      return $this->friends->contains('user_requested', $user_id);
+        return $this->friends->contains('user_requested', $user_id);
+    }
+
+    /**
+     * Get all posts
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Return the user's liked posts.
+     */
+    public function liked()
+    {
+        return $this->belongsToMany(Post::class, 'liked')->withPivot('id');
     }
 }

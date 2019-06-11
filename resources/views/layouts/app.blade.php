@@ -26,15 +26,13 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="/css/uikit-rtl.min.css">
-    <link rel="stylesheet" href="/css/uikit-rtl.css">
-    <link rel="stylesheet" href="/css/uikit.css">
     <link rel="stylesheet" href="/css/uikit.min.css">
 
 </head>
 <body>
     <div id="app">
       <v-toolbar>
-          <v-toolbar-title> Chat</v-toolbar-title>
+          <v-toolbar-title> Eindwebs</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items class="hidden-sm-and-down">
                   @guest
@@ -44,9 +42,7 @@
                       <v-btn flat href="{{ route('chat.group') }}">Group</v-btn>
                       <v-btn flat href="{{ route('chat.private') }}">Private</v-btn>
                       <v-btn flat href="{{ route('profile.index', ['user' => Auth::id() ]) }}"> {{ Auth::user()->name }}</v-btn>
-                      <v-btn flat
-                      @click=" $refs.logoutForm.submit(); ">
-                      Logout</v-btn>
+                      <v-btn flat @click=" $refs.logoutForm.submit(); ">Logout</v-btn>
                   @endguest
                   <form ref="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
           </v-toolbar-items>
@@ -54,12 +50,16 @@
 
       <main>
           <v-container fluid>
+              @if(hasMessage())
+                {!! getMessage() !!}
+              @endif
+
               @yield('main')
           </v-container>
       </main>
 
     </div>
-    
+
     @hasSection('scripts.footer')
         @yield('scripts.footer')
     @endif

@@ -9,18 +9,8 @@ use Auth;
 class ProfileController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Show profile view.
-     *
+     * @param User $user, current user.
      * @return \Illuminate\Http\Response.
      */
     public function showProfile(User $user)
@@ -35,7 +25,8 @@ class ProfileController extends Controller
      */
     public function showRequests()
     {
-        return view('modules.profile.requests');
+        $user = Auth::user();
+        return view('modules.profile.requests', compact('user'));
     }
 
     /**
@@ -45,37 +36,57 @@ class ProfileController extends Controller
      */
     public function showFriends()
     {
-        return view('modules.profile.friends');
+        $user = Auth::user();
+        return view('modules.profile.friends', compact('user'));
     }
 
     /**
-     * Send a friend request.
-     *
+     * Update the users profile.
+     * @param Request $request, Form data
      * @return \Illuminate\Http\Response.
      */
-    public function sendFriendRequest(User $user)
+    public function update(Request $request)
     {
-        return Auth::user()->addFriend($user->id);
+      // Get the user
+      $user = Auth::user();
+
+      // Update the user.
+      $user->update([
+        'residence' => $request->residence,
+        'workplace' => $request->workplace,
+        'school' => $request->school,
+        'birthplace' => $request->birthplace,
+        'relationship' => $request->relationship
+      ]);
+
+      setMessage("Your profile has been updated", "success");
+      return redirect()->back();
     }
 
     /**
-     * Remove a user from your friends.
-     *
+     * Upload header image.
+     * @param Request $request, Form data
      * @return \Illuminate\Http\Response.
      */
-    public function removeFriend(User $user)
+    public function upload(Request $request)
     {
-        return Auth::user()->deleteFriend($user->id);
-    }
+      // Get the user
+      $user = Auth::user();
 
-    /**
-     * Accept a user's friendrequest.
-     *
-     * @return \Illuminate\Http\Response.
-     */
-    public function acceptFriendRequest(User $user)
-    {
-        return Auth::user()->acceptFriend($user->id);
+      if($request->hasFile('image'))
+      {
+        // Store image
+        $filenameImage = $request->image->getClientOriginalName();
+        $request->image->storeAs('public/headers', $filenameImage);
+
+        // Update the user.
+        $user->update([
+          'header_image' => 'headers/'.$filenameImage
+        ]);
+      }
+
+      setMessage("Image has successfully been uploaded.", "success");
+      return redirect()->route('profile.index', ['user' => Auth::id()]);
     }
 
 

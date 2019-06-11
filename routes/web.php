@@ -43,9 +43,24 @@ Route::group(['prefix' => '/profile', 'as' => 'profile.'], function() {
   Route::get('/requests', ['as' => 'requests', 'uses' => 'ProfileController@showRequests']);
   Route::get('/friends', ['as' => 'friends', 'uses' => 'ProfileController@showFriends']);
   Route::get('/{user}', ['as' => 'index', 'uses' => 'ProfileController@showProfile']);
-  Route::post('/{user}/add', ['as' => 'addfriend', 'uses' => 'ProfileController@sendFriendRequest']);
-  Route::post('/{user}/remove', ['as' => 'removefriend', 'uses' => 'ProfileController@removeFriend']);
-  Route::post('/{user}/accept', ['as' => 'acceptfriend', 'uses' => 'ProfileController@acceptFriendRequest']);
+  Route::post('/{user}/add', ['as' => 'addfriend', 'uses' => 'FriendController@sendFriendRequest']);
+  Route::post('/{user}/remove', ['as' => 'removefriend', 'uses' => 'FriendController@removeFriend']);
+  Route::post('/{user}/accept', ['as' => 'acceptfriend', 'uses' => 'FriendController@acceptFriendRequest']);
+  Route::post('/{user}/decline', ['as' => 'declinefriend', 'uses' => 'FriendController@declineFriendRequest']);
+
+  Route::post('/edit', ['as' => 'edit', 'uses' => 'ProfileController@update']);
+  Route::post('/image', ['as' => 'upload', 'uses' => 'ProfileController@upload']);
+
+  Route::post('/post', ['as' => 'post', 'uses' => 'PostController@create']);
+  Route::post('/comment', ['as' => 'comment', 'uses' => 'PostController@createComment']);
+  Route::get('/comment/{comment}/delete', ['as' => 'comment.delete', 'uses' => 'PostController@deleteComment']);
+  Route::get('/post/{post}/delete', ['as' => 'post.delete', 'uses' => 'PostController@deletePost']);
+
+});
+
+Route::group(['prefix' => 'api'], function () {
+
+  Route::post('post/like', ['as' => 'post.liked.toggle', 'uses' => 'PostController@toggleLiked']);
 
 });
 

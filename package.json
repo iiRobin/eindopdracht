@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "animejs": "^3.0.1",
         "emoji-mart-vue": "^2.6.6",
         "laravel-echo": "^1.5.3",
         "moment": "^2.24.0",

@@ -62,4 +62,20 @@ trait Friendable
 
         return 'failed';
     }
+
+    public function declineFriend($user_id)
+    {
+        $friendship = Friendship::where('requester', $user_id)
+                                  ->where('user_requested', Auth::id())
+                                  ->where('status', 'requested')->first();
+
+        if($friendship)
+        {
+            $friendship->delete();
+
+            return $friendship;
+        }
+
+        return 'failed';
+    }
 }
