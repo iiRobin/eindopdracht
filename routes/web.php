@@ -49,7 +49,11 @@ Route::group(['prefix' => '/profile', 'as' => 'profile.'], function() {
   Route::post('/{user}/decline', ['as' => 'declinefriend', 'uses' => 'FriendController@declineFriendRequest']);
 
   Route::post('/edit', ['as' => 'edit', 'uses' => 'ProfileController@update']);
-  Route::post('/image', ['as' => 'upload', 'uses' => 'ProfileController@upload']);
+  Route::post('/header', ['as' => 'header.upload', 'uses' => 'ProfileController@uploadHeader']);
+  Route::get('/{user}/header/delete', ['as' => 'header.delete', 'uses' => 'ProfileController@deleteHeader']);
+  Route::post('/image', ['as' => 'image.upload', 'uses' => 'ProfileController@uploadImage']);
+  Route::get('/{user}/image/delete', ['as' => 'image.delete', 'uses' => 'ProfileController@deleteImage']);
+
 
   Route::post('/post', ['as' => 'post', 'uses' => 'PostController@create']);
   Route::post('/comment', ['as' => 'comment', 'uses' => 'PostController@createComment']);

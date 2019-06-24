@@ -1,7 +1,7 @@
 <div class="uk-width-1-3@m" style="padding: 0px 0px;">
   @if(count($user->posts) > 0)
     @foreach($user->posts->sortByDesc('created_at') as $post)
-      <div class="uk-card uk-card-default uk-card-hover uk-margin-small-bottom post">
+      <div class="uk-card uk-card-default uk-card-hover uk-margin-small-bottom uk-visible-toggle post" tabindex="-1">
         <div class="uk-card-header">
           <div class="uk-grid-small uk-flex-middle" uk-grid>
             <div class="uk-width-auto">
@@ -10,9 +10,6 @@
             <div class="uk-width-expand">
               <h3 class="uk-card-title uk-margin-remove-bottom">
                 <a class="uk-link-heading" href="{{ route('profile.index', ['user' => $post->user->id]) }}">{{ $post->user->name }}</a>
-                @if($user->id == Auth::id())
-                  <a href="#removePostModal-{{ $post->id }}" class="uk-align-right" uk-icon="icon: close" uk-toggle></a>
-                @endif
               </h3>
               <p class="uk-text-meta uk-margin-remove-top">
                 <time datetime="{{ $post->created_at }}">{{ Carbon\Carbon::parse($post->created_at)->diffForHumans() }}</time>
@@ -20,6 +17,11 @@
             </div>
           </div>
         </div>
+        @if($post->user->id == Auth::id())
+          <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+            <a href="#removePostModal-{{ $post->id }}" class="uk-align-right" uk-icon="icon: close" uk-toggle></a>
+          </div>
+        @endif
         <div class="uk-card-body" uk-grid style="padding: 20px 35px;padding-bottom:0px !important">
           <div class="uk-width-expand uk-text-left">
             {{ $post->content }}
@@ -55,31 +57,34 @@
           <h2 class="uk-modal-title">Comments</h2>
           @if(count($post->comments) > 0)
             @foreach($post->comments as $comment)
-              <div class="uk-card uk-card-default uk-card-hover uk-margin-small-bottom post">
-                <div class="uk-card-header">
-                  <div class="uk-grid-small uk-flex-middle" uk-grid>
+              <article class="uk-comment uk-visible-toggle" tabindex="-1">
+                <header class="uk-comment-header uk-position-relative">
+                  <div class="uk-grid-medium uk-flex-middle" uk-grid>
                     <div class="uk-width-auto">
-                      <img class="uk-border-circle" width="40" height="40" src="{{ asset('storage') .'/'. $comment->user->avatar }}" alt="{{ $comment->user->name }}'s avatar">
+                      <img class="uk-comment-avatar" src="{{ asset('storage') .'/'. $comment->user->avatar }}" width="80" height="80" alt="">
                     </div>
                     <div class="uk-width-expand">
-                      <h3 class="uk-card-title uk-margin-remove-bottom">
-                        <a class="uk-link-heading" href="{{ route('profile.index', ['user' => $comment->user->id]) }}">{{ $comment->user->name }}</a>
-                        @if($comment->user->id == Auth::id())
-                          <a href="#removeCommentModal" class="uk-align-right" uk-icon="icon: close" uk-toggle></a>
-                        @endif
-                      </h3>
-                      <p class="uk-text-meta uk-margin-remove-top">
-                        <time datetime="{{ $post->created_at }}">{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</time>
-                      </p>
+                      <h4 class="uk-comment-title uk-margin-remove">
+                        <a class="uk-link-reset" href="{{ route('profile.index', ['user' => $comment->user->id]) }}">{{ $comment->user->name }}</a>
+                      </h4>
+                      <ul class="uk-comment-meta uk-subnav uk-subnav-divider uk-margin-remove-top">
+                        <li>{{ Carbon\Carbon::parse($comment->created_at)->diffForHumans() }}</li>
+                      </ul>
                     </div>
                   </div>
+                  @if($comment->user->id == Auth::id())
+                    <div class="uk-position-top-right uk-position-small uk-hidden-hover">
+                      <a href="#removeCommentModal" class="uk-align-right" uk-icon="icon: close" uk-toggle></a>
+                    </div>
+                  @endif
+                </header>
+                <div class="uk-comment-body">
+                  <p>{{ $comment->content }}</p>
                 </div>
-                <div class="uk-card-body" uk-grid style="padding: 20px 35px;padding-bottom:0px !important">
-                  <div class="uk-width-expand uk-text-left">
-                    {{ $comment->content }}
-                  </div>
-                </div>
-              </div>
+              </article>
+              @if(!$loop->last)
+                <hr />
+              @endif
               <div id="removeCommentModal" class="uk-flex-top" style="z-index:99999;" uk-modal>
                 <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
                   <div class="uk-modal-header">

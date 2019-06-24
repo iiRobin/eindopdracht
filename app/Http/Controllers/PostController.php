@@ -47,7 +47,7 @@ class PostController extends Controller
      * @param Request $request, Form data
      * @return \Illuminate\Http\Response.
      */
-    public function deleteComment(Request $request, Comment $comment)
+    public function deleteComment(Comment $comment)
     {
         // Delete the comment
         $comment->delete();

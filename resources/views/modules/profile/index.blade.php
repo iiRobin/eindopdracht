@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', $user->name)
+
 @section('main')
 <div class="uk-container">
   @include('modules.profile.partials.header')

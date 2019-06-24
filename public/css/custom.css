@@ -31,16 +31,24 @@
 }
 
 input[type=file] {
-    display:block;
-    height:0;
-    width:0;
+  display:block;
+  height:0;
+  width:0;
 }
 
 .avatar {
-  height: 200%;
+  background-color: white;
+  height: 100%;
+  border: 2px solid #555;
+  border-radius: 500px;
+  -webkit-border-radius: 500px;
+  -moz-border-radius: 500px;
+}
+
+.imgwrapper {
   margin-left: 40px;
   margin-top: -80px;
-  border: 2px solid #555;
+  z-index: 9999;
   border-radius: 500px;
   -webkit-border-radius: 500px;
   -moz-border-radius: 500px;
@@ -169,4 +177,15 @@ input[type=file] {
 .liked svg path {
   fill: #FF2D00;
   stroke: #A01D00 !important;
+}
+
+.editavatar {
+  position: relative;
+  right: 73px;
+  bottom: 73px;
+  text-align: center;
+}
+
+.editavatar:hover {
+
 }
